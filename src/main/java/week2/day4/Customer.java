@@ -1,4 +1,4 @@
-package it.epicode.week2.day3;
+package week2.day4;
 
 public class Customer {
     private long id;

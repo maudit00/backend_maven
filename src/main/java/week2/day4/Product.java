@@ -1,5 +1,4 @@
-package it.epicode.week2.day3;
-
+package week2.day4;
 public class Product {
    private long id;
    private String name;
