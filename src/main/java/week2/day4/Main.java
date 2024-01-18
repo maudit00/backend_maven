@@ -31,11 +31,16 @@ public class Main {
 
         Map<Customer, List<Order> > orderByCustomer = orders.stream().collect(Collectors.groupingBy(Order::getCustomer));
         Map<Customer, Double> totalByCustomer = orders.stream().collect(Collectors.groupingBy(Order::getCustomer, Collectors.summingDouble(order -> order.getProducts().stream().mapToDouble(Product::getPrice).sum())));
-        List<Product> expensiveProducts = products.stream().collect(Collectors.toCollection(()-> new TreeSet<Product>(Comparator.comparingDouble(Product::getPrice))));
+        List<Product> expensiveProducts = products.stream().sorted((pro1,pro2) -> (int) (pro2.getPrice() - pro1.getPrice())).limit(3).toList();
         Optional<Product> mostExpensive = products.stream().max(Comparator.comparingDouble(Product::getPrice));
+        Double averageCost = orders.stream().collect(Collectors.averagingDouble(order -> order.getProducts().stream().mapToDouble(Product::getPrice).sum()));
+
         System.out.println(orderByCustomer);
         System.out.println(totalByCustomer);
         System.out.println("Prodotto più costoso " + mostExpensive);
+        System.out.println("Lista dei più costosi");
+        System.out.println(expensiveProducts);
+        System.out.println(averageCost);
     }
 
 }
