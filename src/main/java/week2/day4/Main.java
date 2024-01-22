@@ -1,8 +1,9 @@
 package week2.day4;
 
 import org.apache.commons.io.FileUtils;
-
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -72,6 +73,41 @@ public class Main {
         System.out.println(averageCost);
         System.out.println("Costo per categoria");
         System.out.println(costByCat);
+
+        try {
+            salvaProdottiSuDisco(products);
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            ArrayList<Product> prodotti = leggiProdottiDaDisco();
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
     }
 
+    public static void salvaProdottiSuDisco (List<Product> products) throws IOException {
+        File file = new File("prodotti/prodotti.txt");
+        String stringaProdotti = products.stream()
+                .map(p -> p.getName() + "@" + p.getCategory() + "@" + p.getPrice() )
+                        .collect(Collectors.joining("#"));
+        FileUtils.writeStringToFile(file, stringaProdotti, Charset.defaultCharset(), true);
+    }
+
+    public static ArrayList<Product> leggiProdottiDaDisco () throws IOException{
+        File file = new File("prodotti/prodotti.txt");
+        String productString = FileUtils.readFileToString(file, Charset.defaultCharset());
+        System.out.println(productString);
+        String[] array = productString.split("#");
+        Arrays.stream(array).forEach(s -> System.out.println(s));
+        ArrayList<Product> prodotti = Arrays.stream(array)
+                .map(s -> {
+                    String[] detailsString = s.split("@");
+                    Product p = new Product(detailsString[0],detailsString[1],Double.parseDouble(detailsString[2]));
+                    return p;
+                } )
+                .collect(Collectors.toCollection(ArrayList::new));
+        return prodotti;
+    }
 }

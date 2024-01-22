@@ -1,0 +1,28 @@
+|| esercizio 1
+select * from public.clienti where nome='Mario';
+|| esercizio 2
+select nome, cognome from public.clienti where EXTRACT(YEAR from anno_nascita)=1982;
+|| esercizio 3
+select * from public.fatture where iva>=20;
+|| esercizio 4
+select * from public.prodotti where (data_attivazione between '2017-01-01' and '2017-12-31') and (in_produzione=true or in_commercio=true);
+
+|| esercizio 5
+select * from public.fatture f inner join public.clienti c on f.id_cliente=c.numero_cliente  where importo < 1000;
+||esercizio 6
+select numero_fattura, importo, iva, data_fattura, denominazione from public.fatture fa join public.fornitori fo on fa.numero_fornitore = fo.numero_fornitore;
+||esercizio 7
+select count(*), EXTRACT(YEAR from data_fattura) as anno from fatture where iva >=20 group by anno;
+
+||esercizio 8
+select count(*), EXTRACT(YEAR from data_fattura) as anno, sum(importo) from fatture group by anno;
+
+||esercizio 9
+select count(*) as totale, EXTRACT (YEAR from data_fattura) as anno from fatture where tipologia='a' group by anno having count(*)>=2;
+
+||esercizio 10
+select count(*), sum(importo) as totale, regione_residenza as regione from public.fatture f join public.clienti c on f.id_cliente = c.numero_cliente group by regione;
+
+||esercizio 11
+select count (*) from fatture where id_cliente in (select numero_cliente from clienti where extract(year from anno_nascita)=1980) and importo > 50;
+
